@@ -24,11 +24,7 @@ public class LoginController {
     @Autowired
     private StudentService studentService;
     @Autowired
-    private StudentMapper studentMapper;
-    @Autowired
     private TeacherService teacherService;
-    @Autowired
-    private TeacherMapper teacherMapper;
 
     @PostMapping("")
     public Result login(@RequestBody LoginDTO loginDTO){

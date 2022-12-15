@@ -21,11 +21,7 @@ public class SignController {
     @Autowired
     private StudentService studentService;
     @Autowired
-    private StudentMapper studentMapper;
-    @Autowired
     private TeacherService teacherService;
-    @Autowired
-    private TeacherMapper teacherMapper;
     @PostMapping("")
     public Result sign(@RequestBody SignDTO signDTO){
         Integer radio = signDTO.getRadio();
