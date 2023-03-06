@@ -28,6 +28,7 @@ public class JwInterceptorStudent implements HandlerInterceptor {
     private TeacherService teacherService;
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+
 //        不是映射方法则直接通过
         String token = request.getHeader("Authorization");
         if (!(handler instanceof HandlerMethod)){

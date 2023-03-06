@@ -13,6 +13,7 @@ import com.spring.springboot.entity.Student;
 import com.spring.springboot.service.CardService;
 import com.spring.springboot.service.NoteService;
 import com.spring.springboot.service.StudentService;
+import com.spring.springboot.utils.TimeUtils;
 import com.spring.springboot.utils.TokenUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,9 +79,26 @@ public class StudentController {
         return Result.success(page1);
 
     }
+    @GetMapping("/leave")
+    public Result leave(@RequestParam Integer studentId){
+        String timeNow = TimeUtils.getStringDate();
+        QueryWrapper<Note> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("student_id",studentId);
+        queryWrapper.eq("note_enable",1);
+        queryWrapper.le("leave_time",timeNow);
+        queryWrapper.ge("return_time",timeNow);
+        List<Note> notes = noteService.list(queryWrapper);
+        return Result.success(notes);
+    }
+
+
+
+
+
 
     @PostMapping("/beatCard")
     public Result beatCard(@RequestBody Card card){
+        card.setTime(TimeUtils.getStringDate());
         cardService.save(card);
         return Result.success("提交成功");
     }

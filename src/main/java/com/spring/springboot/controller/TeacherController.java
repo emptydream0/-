@@ -56,7 +56,7 @@ public class TeacherController {
         return Result.success(byId);
     }
 
-    @PostMapping("/grant")
+    @GetMapping("/grant1")
     private Result grant(@RequestParam Integer teacherId,@RequestParam String teacherName,@RequestParam Integer noteId,@RequestParam Integer grant){
         Note note = new Note();
         new Note();
@@ -69,9 +69,23 @@ public class TeacherController {
         noteService.updateById(note);
         noteReturn=noteService.getById(noteId);
         return Result.success(noteReturn);
-
-
     }
+
+    @GetMapping("/grant")
+    private Result grantTest(@RequestParam Integer teacherId,@RequestParam String teacherName,@RequestParam Integer noteId,@RequestParam Integer grantResult){
+        Note note = new Note();
+        Note noteReturn = new Note();
+        note.setNoteId(noteId);
+        note.setTeacherId(teacherId);
+        note.setTeacherName(teacherName);
+        note.setNoteEnable(grantResult);
+        note.setGrantTime(TimeUtils.getStringDate());
+        noteService.updateById(note);
+        noteReturn = noteService.getById(noteId);
+        return Result.success(noteReturn);
+    }
+
+
     @GetMapping("/getNotes")
     private Result getNotes(@RequestParam Integer pageNum,@RequestParam Integer pageSize,@RequestParam String name,@RequestParam String className){
         IPage<Note> page = new Page<>(pageNum,pageSize);
@@ -90,7 +104,8 @@ public class TeacherController {
         IPage<Note> page = new Page<>(pageNum,pageSize);
         QueryWrapper<Note> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("class_name",className);
-        queryWrapper.eq("note_enable",0);
+//        queryWrapper.eq("note_enable",0);
+        queryWrapper.orderByAsc("note_enable");
         queryWrapper.orderByDesc("grant_time");
         IPage<Note> page1 = noteService.page(page,queryWrapper);
         return Result.success(page1);
