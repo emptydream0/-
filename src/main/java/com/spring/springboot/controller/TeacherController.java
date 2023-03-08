@@ -6,11 +6,14 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.spring.springboot.common.Result;
+import com.spring.springboot.controller.DTO.StudentCheckDTO;
 import com.spring.springboot.controller.DTO.TeacherDTO;
 import com.spring.springboot.controller.DTO.TeacherDTO;
+import com.spring.springboot.entity.Card;
 import com.spring.springboot.entity.Note;
 import com.spring.springboot.entity.Teacher;
 import com.spring.springboot.entity.Teacher;
+import com.spring.springboot.mapper.StudentCheckDTOMapper;
 import com.spring.springboot.service.CardService;
 import com.spring.springboot.service.NoteService;
 import com.spring.springboot.service.TeacherService;
@@ -18,6 +21,10 @@ import com.spring.springboot.utils.TimeUtils;
 import com.spring.springboot.utils.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @RestController
 @RequestMapping("/teacher")
@@ -28,11 +35,30 @@ public class TeacherController {
     private NoteService noteService;
     @Autowired
     private CardService cardService;
+    @Autowired
+    private StudentCheckDTOMapper studentCheckDTOMapper;
     @PostMapping("/findAll")
     public Result findAll(){
         return Result.success(teacherService.list());
     }
 
+
+    @GetMapping("/checkCard")
+    public Result checkCard(@RequestParam String mayjoyName){
+        System.out.println("查看打卡");
+        String date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        List<StudentCheckDTO> studentChecks = studentCheckDTOMapper.getStudentCheckList(mayjoyName,date
+        );
+        return Result.success(studentChecks);
+    }
+
+    @GetMapping("/checkCardById")
+    private Result checkCardById(@RequestParam Integer studentId){
+        QueryWrapper<Card> qr = new QueryWrapper<>();
+        qr.eq("student_id",studentId);
+        List<Card> cards = cardService.list(qr);
+     return Result.success(cards);
+    }
 
     @PostMapping("/update")
     private Result update(@RequestBody TeacherDTO teacherDTO){

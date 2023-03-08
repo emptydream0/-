@@ -19,6 +19,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -98,10 +102,40 @@ public class StudentController {
 
     @PostMapping("/beatCard")
     public Result beatCard(@RequestBody Card card){
-        card.setTime(TimeUtils.getStringDate());
-        cardService.save(card);
-        return Result.success("提交成功");
+        Integer studentId = card.getStudentId();
+        LocalDateTime now = LocalDateTime.now();
+        LocalDate today = now.toLocalDate();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String todayString = today.format(formatter);            //获取今天的时间
+
+        LocalDate date = LocalDate.parse(todayString);
+        LocalDateTime startTime = LocalDateTime.of(date, LocalTime.MIN);
+        LocalDateTime endTime = LocalDateTime.of(date, LocalTime.MAX);
+
+         //生成今日的开始时间和结束时间
+
+        QueryWrapper<Card> qr =new QueryWrapper<>();
+        qr.eq("student_id",studentId);
+        qr.between("time",startTime,endTime);
+        List<Card> cards = cardService.list(qr);                //查看今日是否有过打卡，如果没有则允许打卡，反之亦然
+        if (cards.isEmpty()){
+            System.out.println("cards的长度："+cards.size()+cards.isEmpty());
+            card.setTime(TimeUtils.getStringDate());
+            cardService.save(card);
+            return Result.success("提交成功");
+        }else return Result.success("今日已经打过卡");
+
+
+
     }
+
+
+
+
+
+
+
+
     @PostMapping("/getCard")
     public Result getCard(@RequestParam Integer pageNum,@RequestParam Integer pageSize){
         Integer studentID=TokenUtils.getUserId();

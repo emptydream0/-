@@ -8,7 +8,7 @@ import lombok.Data;
 public class Card {
     @TableId(type = IdType.AUTO)
     private Integer cardId;
-    private Integer studentID;
+    private Integer studentId;
     private String studentName;
     private String time;
     private String address;

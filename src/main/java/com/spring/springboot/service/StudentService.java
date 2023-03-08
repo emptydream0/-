@@ -4,16 +4,19 @@ import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.spring.springboot.controller.DTO.StudentDTO;
+import com.spring.springboot.controller.DTO.StudentCheckDTO;
 import com.spring.springboot.entity.Student;
 import com.spring.springboot.exception.ServiceException;
 import com.spring.springboot.mapper.StudentMapper;
 import com.spring.springboot.utils.TokenUtils;
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 
 @Service
 public class StudentService extends ServiceImpl<StudentMapper,Student> {
@@ -67,6 +70,9 @@ public class StudentService extends ServiceImpl<StudentMapper,Student> {
 
 
     }
+
+
+
 
 
 
